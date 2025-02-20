@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Registros</title>
+</head>
+<body>
+    <h2>Lista de Registros</h2>
+    <table border="1">
+        <tr>
+            <th>Fecha Solicitud</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        {% for registro in registros %}
+        <tr>
+            <td>{{ registro.fecha_solicitud }}</td>
+            <td>{{ registro.cliente }}</td>
+            <td>{{ registro.estado }}</td>
+            <td><a href="#">Editar</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="{% url 'agregar_registro' %}">Agregar Nuevo Registro</a>
+</body>
+</html>
