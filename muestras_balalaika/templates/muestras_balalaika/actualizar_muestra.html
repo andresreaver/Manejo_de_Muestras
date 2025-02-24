@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "muestras_balalaika/base.html" %}
+
+{% block title %}Actualizar Muestra{% endblock %}
+
+{% block content %}
+    <h2>Actualizar Muestra</h2>
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.fecha_envio.id_for_label }}">Fecha de Envío:</label>
+                {{ form.fecha_envio }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.metros_enviados.id_for_label }}">Metros Enviados:</label>
+                {{ form.metros_enviados }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.kg_enviados.id_for_label }}">Kg Enviados:</label>
+                {{ form.kg_enviados }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.hdr.id_for_label }}">HDR:</label>
+                {{ form.hdr }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                {{ form.tipo }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </form>
+{% endblock %}

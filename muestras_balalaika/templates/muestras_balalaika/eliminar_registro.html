@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "muestras_balalaika/base.html" %}
+
+{% block title %}Agregar Registros{% endblock %}
+
+{% block content %}
+    <h2>¿Estás seguro de que quieres eliminar este registro?</h2>
+    <p><strong>Cliente:</strong> {{ registro.cliente }}</p>
+    <p><strong>Fecha Solicitud:</strong> {{ registro.fecha_solicitud }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Eliminar</button>
+        <a href="{% url 'lista_registros' %}">Cancelar</a>
+    </form>
+{% endblock %}

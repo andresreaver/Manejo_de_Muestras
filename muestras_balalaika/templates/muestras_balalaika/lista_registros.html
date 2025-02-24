@@ -1,29 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Registros</title>
-</head>
-<body>
+{% extends "muestras_balalaika/base.html" %}
+
+{% block title %}Agregar Registros{% endblock %}
+
+{% block content %}
+
     <h2>Lista de Registros</h2>
-    <table border="1">
-        <tr>
-            <th>Fecha Solicitud</th>
-            <th>Cliente</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-        {% for registro in registros %}
+
+        <form method="GET" action="{% url 'lista_registros' %}" class="mb-3">
+            <input type="text" name="q" value="{{ query }}" placeholder="Buscar (Cliente, Comercial o Referencia)" class="form-control">
+            <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+        </form>
+        <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Fecha Solicitud</th>
+                <th>Cliente</th>
+                <th>Referencia</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
         <tr>
             <td>{{ registro.fecha_solicitud }}</td>
             <td>{{ registro.cliente }}</td>
+            <td>{{ registro.referencia}}</td>
             <td>{{ registro.estado }}</td>
-            <td><a href="#">Editar</a></td>
+
+
+            <td>
+                <a href="{% url 'editar_registro' registro.pk %}">Editar</a>
+                <a href="{% url 'eliminar_registro' registro.pk %}">Eliminar</a>
+            </td>
+
         </tr>
         {% endfor %}
+        </tbody>
     </table>
-    <br>
-    <a href="{% url 'agregar_registro' %}">Agregar Nuevo Registro</a>
-</body>
-</html>
+{% endblock %}

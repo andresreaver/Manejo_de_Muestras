@@ -1,0 +1,57 @@
+/* Estilos generales */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos para la barra lateral */
+.sidebar {
+    width: 250px;
+    height: 100vh; /* Hace que la barra lateral ocupe toda la altura */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    overflow-y: auto;
+}
+
+.sidebar h4 {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-link {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+    display: block;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #495057;
+    color: #ffffff;
+}
+
+/* Estilo para el enlace de cerrar sesión */
+.sidebar .nav-link.text-danger {
+    color: #dc3545;
+}
+
+.sidebar .nav-link.text-danger:hover {
+    background-color: #721c24;
+    color: white;
+}
+
+/* Ajustar contenido principal */
+.container {
+    margin-left: 250px; /* Ajusta el margen izquierdo al ancho de la barra */
+    padding: 20px;
+    width: calc(100% - 250px);
+}
+

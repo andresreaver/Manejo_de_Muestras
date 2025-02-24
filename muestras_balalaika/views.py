@@ -1,8 +1,16 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from .forms import SolicitarMuestraForm, SeguimientoMuestraForm, LegalizarMuestraForm
 from .models import Registro
+from django.urls import reverse
+import datetime
+from django.utils.timezone import now
 
+def home_redirect(request):
+    if request.user.is_authenticated:
+        return redirect('lista_registros')
+    return redirect('user_login')
 def solicitar_muestra(request):
     if request.method == 'POST':
         form = SolicitarMuestraForm(request.POST)
@@ -10,16 +18,14 @@ def solicitar_muestra(request):
             registro = form.save(commit=False)
             registro.estado = "SOLICITADA"
             registro.save()
-            return redirect('seguimiento_muestra')
+            return redirect(reverse('seguimiento_muestra'))
     else:
         form = SolicitarMuestraForm()
 
     return render(request, 'muestras_balalaika/solicitar_muestra.html',{'form': form})
 
 def seguimiento_muestra(request):
-    #Obtener muestras en estado Solicitada y en proceso
     muestras = Registro.objects.filter(estado__in=["SOLICITADA", "EN PROCESO"])
-
     return render(request, 'muestras_balalaika/seguimiento_muestra.html', {'muestras':muestras})
 
 def actualizar_muestra(request, pk):
@@ -44,27 +50,21 @@ def marcar_sin_existencia(request, pk):
     return redirect('seguimiento_muestra')
 
 def lista_registros(request):
-    registros = Registro.objects.all()
-    return render(request,'muestras_balalaika/lista_registros.html',{'registros':registros})
+    first_day_of_month = datetime.datetime(now().year, now().month, 1)
+    query = request.GET.get('q', '').strip()
+    registros = Registro.objects.filter(fecha_solicitud__gte=first_day_of_month)
 
+    if query:
+        registros = registros.filter(
+        Q(cliente__icontains=query)|
+        Q(comercial__icontains=query)|
+        Q(referencia__icontains=query)
+        )
 
+    return render(request,'muestras_balalaika/lista_registros.html',{'registros':registros, 'query':query})
 
-
-
-            
-
-def editar_registro(request, pk):
-    registro = get_object_or_404(Registro, pk=pk)
-    if request.method == "POST":
-        form = RegistroForm(request.POST, instance=registro)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_registros')
-    else:
-        form = RegistroForm(instance=registro)
-
-    return render(request, 'muestras_balalaika/editar_registro.html', {'form': form, 'registro': registro})
-
+@login_required
+@permission_required('muestras_balalaika.delete_registro', raise_exception=True)
 def eliminar_registro(request, pk):
     registro = get_object_or_404(Registro, pk=pk)
     if request.method == "POST":
@@ -73,22 +73,23 @@ def eliminar_registro(request, pk):
 
     return render(request, 'muestras_balalaika/eliminar_registro.html', {'registro': registro})
 
-def buscar_registro(request):
-    query = request.GET.get('q', '').strip()
-    resultados = None
+@login_required
+@permission_required('muestras_balalaika.change_registro', raise_exception=True)
+def editar_registro(request, pk):
+    registro = get_object_or_404(Registro, pk=pk)
+    if request.method == "POST":
+        form = SolicitarMuestraForm(request.POST, instance=registro)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_registros')
+    else:
+        form = SolicitarMuestraForm(instance=registro)
 
-    if query:
-        resultados = Registro.objects.filter(
-            Q(cliente__icontains=query) |
-            Q(comercial__icontains=query) |
-            Q(referencia__icontains=query)
-        )
-    return render(request, 'muestras_balalaika/buscar_registro.html', {'resultados': resultados, 'query': query})
+    return render(request, 'muestras_balalaika/editar_registro.html', {'form': form, 'registro': registro})
 
 def entregar_muestra(request):
     #Filtrar las muestras que tengan estado en proceso
     muestras_en_proceso = Registro.objects.filter(estado="EN PROCESO")
-
     return render(request, 'muestras_balalaika/entrega_muestra.html', {'muestras_en_proceso':muestras_en_proceso})
 
 def actualizar_entrega(request, pk):
@@ -100,10 +101,10 @@ def actualizar_entrega(request, pk):
             registro = form.save(commit=False)
             registro.estado = "ENTREGADO"
             registro.save()
-            return redirect('entrega_muestra')
+            return redirect(reverse('entrega_muestra'))
 
     else:
-        form = SeguimientoMuestraForm(instance=registro)
+        form = LegalizarMuestraForm(instance=registro)
 
     return render(request,'muestras_balalaika/actualizar_entrega.html', {'form':form, 'registro':registro})
             

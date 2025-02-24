@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "muestras_balalaika/base.html" %}
+
+{% block title %}Actualizar Entrega{% endblock %}
+
+{% block content %}
+    <h2>Actualizar Entrega</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.fecha_llegada.id_for_label }}">Fecha de Llegada: </label>{{ form.fecha_llegada }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.remision.id_for_label }}">Remisión: </label>
+                {{ form.remision }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.fecha_remision.id_for_label }}">Fecha Remisión: </label>
+                {{ form.fecha_remision }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.doc_sag.id_for_label }}">Documento SAG: </label>
+                {{ form.doc_sag }}
+            </div>
+            <button type="submit" class="btn btn-success">Guardar y Marcar como Entregada</button>
+        </form>
+{% endblock %}

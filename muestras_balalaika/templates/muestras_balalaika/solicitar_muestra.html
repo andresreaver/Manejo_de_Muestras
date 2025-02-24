@@ -1,10 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "muestras_balalaika/base.html" %}
+
+{% block title %}Solicitar Muestra{% endblock %}
+
+{% block content %}
+    <h2>Solicitar Muestra</h2>
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="{{ form.cliente.id_for_label }}">Cliente:</label>
+                    {{ form.cliente }}
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <label for="{{ form.comercial.id_for_label }}">Comercial:</label>
+                    {{ form.comercial }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.referencia.id_for_label }}">Referencia:</label>
+                    {{ form.referencia }}
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <label for="{{ form.color.id_for_label }}">Color (solo números):</label>
+                    {{ form.color }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.tipo.id_for_label }}">Tipo:</label>
+                    {{ form.tipo }}
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <label for="{{ form.metros_solicitados.id_for_label }}">Metros Solicitados:</label>
+                    {{ form.metros_solicitados }}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.hdr.id_for_label }}">HDR:</label>
+                    {{ form.hdr }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+        </form>
+{% endblock %}
