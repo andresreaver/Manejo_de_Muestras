@@ -1,10 +1,11 @@
+from datetime import timedelta
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from .forms import SolicitarMuestraForm, SeguimientoMuestraForm, LegalizarMuestraForm
-from .models import Registro
+from .models import Registro, COMERCIAL_CHOICES, ESTADO_CHOICES
 from django.urls import reverse
-import datetime
+from django.core.paginator import Paginator
 from django.utils.timezone import now
 
 def home_redirect(request):
@@ -25,7 +26,7 @@ def solicitar_muestra(request):
     return render(request, 'muestras_balalaika/solicitar_muestra.html',{'form': form})
 
 def seguimiento_muestra(request):
-    muestras = Registro.objects.filter(estado__in=["SOLICITADA", "EN PROCESO"])
+    muestras = Registro.objects.filter(estado__in="SOLICITADA")
     return render(request, 'muestras_balalaika/seguimiento_muestra.html', {'muestras':muestras})
 
 def actualizar_muestra(request, pk):
@@ -50,18 +51,46 @@ def marcar_sin_existencia(request, pk):
     return redirect('seguimiento_muestra')
 
 def lista_registros(request):
-    first_day_of_month = datetime.datetime(now().year, now().month, 1)
     query = request.GET.get('q', '').strip()
-    registros = Registro.objects.filter(fecha_solicitud__gte=first_day_of_month)
+    comercial = request.GET.get('comercial', '')
+    estado = request.GET.get('estado','')
+    referencia = request.GET.get('referencia', '')
+    cliente = request.GET.get('cliente', '')
+
+    ultimo_mes = now() - timedelta(days=30)
+    registros = Registro.objects.filter(fecha_solicitud__gte=ultimo_mes).order_by('-fecha_solicitud')
 
     if query:
-        registros = registros.filter(
+        registros = Registro.objects.filter(
         Q(cliente__icontains=query)|
         Q(comercial__icontains=query)|
         Q(referencia__icontains=query)
-        )
+        ).order_by('-fecha_solicitud')
 
-    return render(request,'muestras_balalaika/lista_registros.html',{'registros':registros, 'query':query})
+    if comercial:
+        registros = Registro.objects.filter(comercial=comercial)
+    if estado:
+        registros = Registro.objects.filter(estado=estado)
+    if referencia:
+        registros = Registro.objects.filter(referencia=referencia)
+    if cliente:
+        registros = Registro.objects.filter(cliente=cliente)
+
+
+    paginator = Paginator(registros, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request,'muestras_balalaika/lista_registros.html',{
+        'page_obj':page_obj,
+        'query':query,
+        'comercial':COMERCIAL_CHOICES,
+        'estado':ESTADO_CHOICES,
+        'comercial_selected':comercial,
+        'estado_selected':estado,
+        'referencia_selected':referencia,
+        'cliente_selected':cliente,
+    })
 
 @login_required
 @permission_required('muestras_balalaika.delete_registro', raise_exception=True)
@@ -89,7 +118,7 @@ def editar_registro(request, pk):
 
 def entregar_muestra(request):
     #Filtrar las muestras que tengan estado en proceso
-    muestras_en_proceso = Registro.objects.filter(estado="EN PROCESO")
+    muestras_en_proceso = Registro.objects.filter(estado="EN PROCESO").order_by('-fecha_solicitud')
     return render(request, 'muestras_balalaika/entrega_muestra.html', {'muestras_en_proceso':muestras_en_proceso})
 
 def actualizar_entrega(request, pk):

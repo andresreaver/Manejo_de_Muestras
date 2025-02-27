@@ -25,22 +25,18 @@
                     <td>
                         {% if registro.estado == "SOLICITADA" %}
                             <span class="badge bg-warning">{{ registro.estado }}</span>
-                        {% elif registro.estado == "EN PROCESO" %}
-                            <span class="badge bg-primary">{{ registro.estado }}</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if registro.estado == "SOLICITADA" %}
                         <a href="{% url 'actualizar_muestra' registro.pk %}" class="btn btn-primary btn-sm">A proceso</a>
                         <a href="{% url 'marcar_sin_existencia' registro.pk %}" class="btn btn-danger btn-sm">Sin Existencia</a>
-                        {%  elif registro.estado == "EN PROCESO" %}
-                        <a href="{% url 'actualizar_muestra' registro.pk %}" class="btn btn-success btn-sm">Editar</a>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay muestras en estado "Solicitada" o "En Proceso".</td>
+                    <td colspan="5" class="text-center">No hay muestras en estado SOLICITADA.</td>
                 </tr>
                 {% endfor %}
             </tbody>
