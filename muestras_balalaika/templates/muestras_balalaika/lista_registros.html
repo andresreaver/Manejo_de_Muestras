@@ -6,14 +6,51 @@
 
     <h2>Lista de Registros</h2>
 
-        <form method="GET" action="{% url 'lista_registros' %}" class="row g-3 mb-4">
-            <div class="col-md-4">
-                <input type="text" name="q" value="{{ query }}" placeholder="Buscar (Cliente, Comercial o Referencia)" class="form-control">
+        <form method="GET" class="row g-3 mb-4">
+            <!-- Buscar por Cliente -->
+            <div class="col-md-3">
+                <input type="text" name="cliente" class="form-control" placeholder="Buscar Cliente" value="{{ cliente }}">
             </div>
 
-            <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+
+            <!-- Buscar por Referencia -->
+            <div class="col-md-3">
+                <input type="text" name="referencia" class="form-control" placeholder="Buscar Referencia" value="{{ referencia }}">
+            </div>
+
+            <!-- Filtrar por Comercial -->
+            <div class="col-md-3">
+                <select name="comercial" class="form-select">
+                    <option value="">Filtrar por Comercial</option>
+                    {% for value, label in comercial_choices %}
+                        <option value="{{ value }}" {% if comercial_selected == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filtrar por Estado -->
+            <div class="col-md-3">
+                <select name="estado" class="form-select">
+                    <option value="">Filtrar por Estado</option>
+                    {% for value, label in estado_choices %}
+                        <option value="{{ value }}" {% if estado_selected == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Botón de Filtrar -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+
+            <!-- Botón de Reset -->
+            <div class="col-md-2">
+                <a href="{% url 'lista_registros' %}" class="btn btn-secondary w-100">Reset</a>
+            </div>
+        
         </form>
-        <table class="table table-striped mt-3">
+
+    <table class="table table-striped mt-3">
         <thead>
             <tr>
                 <th>Fecha Solicitud</th>
