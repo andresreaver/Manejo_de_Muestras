@@ -57,26 +57,29 @@ def lista_registros(request):
     referencia = request.GET.get('referencia', '')
     cliente = request.GET.get('cliente', '')
 
+    #Muestra por defecto los registros del ultimo mes
     ultimo_mes = now() - timedelta(days=30)
     registros = Registro.objects.filter(fecha_solicitud__gte=ultimo_mes).order_by('-fecha_solicitud')
 
+    #Aplicar busqueda general
     if query:
         registros = Registro.objects.filter(
-        Q(cliente__icontains=query)|
-        Q(comercial__icontains=query)|
-        Q(referencia__icontains=query)
+            Q(cliente__icontains=query)|
+            Q(comercial__icontains=query)|
+            Q(referencia__icontains=query)
         ).order_by('-fecha_solicitud')
 
+    #Aplicar filtros adicionales si se seleccionan
     if comercial:
         registros = Registro.objects.filter(comercial=comercial)
     if estado:
         registros = Registro.objects.filter(estado=estado)
     if referencia:
-        registros = Registro.objects.filter(referencia=referencia)
+        registros = Registro.objects.filter(referencia__icontains=referencia)
     if cliente:
-        registros = Registro.objects.filter(cliente=cliente)
+        registros = Registro.objects.filter(cliente__icontains=cliente)
 
-
+    #Paginacion
     paginator = Paginator(registros, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -84,12 +87,12 @@ def lista_registros(request):
     return render(request,'muestras_balalaika/lista_registros.html',{
         'page_obj':page_obj,
         'query':query,
-        'comercial':COMERCIAL_CHOICES,
-        'estado':ESTADO_CHOICES,
+        'comercial_choices':COMERCIAL_CHOICES,
+        'estado_choices':ESTADO_CHOICES,
         'comercial_selected':comercial,
         'estado_selected':estado,
-        'referencia_selected':referencia,
-        'cliente_selected':cliente,
+        'referencia':referencia,
+        'cliente':cliente,
     })
 
 @login_required
