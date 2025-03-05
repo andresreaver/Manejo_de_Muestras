@@ -26,7 +26,7 @@ def solicitar_muestra(request):
     return render(request, 'muestras_balalaika/solicitar_muestra.html',{'form': form})
 
 def seguimiento_muestra(request):
-    muestras = Registro.objects.filter(estado__in="SOLICITADA")
+    muestras = Registro.objects.filter(estado__in=["SOLICITADA"])
     return render(request, 'muestras_balalaika/seguimiento_muestra.html', {'muestras':muestras})
 
 def actualizar_muestra(request, pk):
