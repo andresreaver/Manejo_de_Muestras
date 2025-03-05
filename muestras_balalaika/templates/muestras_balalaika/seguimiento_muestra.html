@@ -16,19 +16,21 @@
                 </tr>
             </thead>
             <tbody>
-                {% for registro in muestras %}
+                {% for muestra in muestras %}
                 <tr>
-                    <td>{{ registro.fecha_solicitud }}</td>
-                    <td>{{ registro.comercial }}</td>
-                    <td>{{ registro.cliente }}</td>
-                    <td>{{ registro.referencia }}</td>
+                    <td>{{ muestra.fecha_solicitud }}</td>
+                    <td>{{ muestra.comercial }}</td>
+                    <td>{{ muestra.cliente }}</td>
+                    <td>{{ muestra.referencia }}</td>
                     <td>
-                        {% if registro.estado == "SOLICITADA" %}
+                        {% if muestra.estado == "SOLICITADA" %}
                             <span class="badge bg-warning">{{ registro.estado }}</span>
+                        {% elif muestra.estado == "EN PROCESO" %}
+                            <span class="badge bg-primary">{{ muestra.estado }}</span>
                         {% endif %}
                     </td>
                     <td>
-                        {% if registro.estado == "SOLICITADA" %}
+                        {% if muestra.estado == "SOLICITADA" %}
                         <a href="{% url 'actualizar_muestra' registro.pk %}" class="btn btn-primary btn-sm">A proceso</a>
                         <a href="{% url 'marcar_sin_existencia' registro.pk %}" class="btn btn-danger btn-sm">Sin Existencia</a>
                         {% endif %}
@@ -36,7 +38,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay muestras en estado SOLICITADA.</td>
+                    <td colspan="6" class="text-center">No hay muestras en estado SOLICITADA o EN PROCESO.</td>
                 </tr>
                 {% endfor %}
             </tbody>

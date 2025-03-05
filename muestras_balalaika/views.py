@@ -12,6 +12,7 @@ def home_redirect(request):
     if request.user.is_authenticated:
         return redirect('lista_registros')
     return redirect('user_login')
+
 def solicitar_muestra(request):
     if request.method == 'POST':
         form = SolicitarMuestraForm(request.POST)
@@ -26,7 +27,12 @@ def solicitar_muestra(request):
     return render(request, 'muestras_balalaika/solicitar_muestra.html',{'form': form})
 
 def seguimiento_muestra(request):
-    muestras = Registro.objects.filter(estado__in="SOLICITADA")
+    muestras = Registro.objects.filter(estado__in=["SOLICITADA","EN PROCESO"])
+    # Debugging para ver si realmente hay registros
+    print("Cantidad de muestras encontradas:", muestras.count())
+    for muestra in muestras:
+        print(f"ID: {muestra.id}, Cliente: {muestra.cliente}, Estado: {muestra.estado}", flush=True)
+
     return render(request, 'muestras_balalaika/seguimiento_muestra.html', {'muestras':muestras})
 
 def actualizar_muestra(request, pk):
