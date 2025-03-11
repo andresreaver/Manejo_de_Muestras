@@ -1,7 +1,7 @@
 from django.urls import path
 
-from . import services
-from .views import crear_usuario, lista_usuarios
+from apps.usuarios import services
+from apps.usuarios.views import lista_usuarios, crear_usuario
 
 urlpatterns = [
     path('login/', services.user_login, name="user_login"),

@@ -23,8 +23,8 @@
         {{ form.nombre }}
     </div>
         <div>
-        <label for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
-        {{ form.apellidos }}
+        <label for="{{ form.apellido.id_for_label }}">Apellido:</label>
+        {{ form.apellido }}
     </div>
         <div>
         <label for="{{ form.cedula.id_for_label }}">Cédula:</label>
@@ -43,7 +43,7 @@
         {{ form.rol }}
     </div>
 
-    <button type="submit">Crear Uusario</button>
+    <button type="submit">Crear Usuario</button>
 </form>
 
 <a href="{% url 'lista_usuarios' %}">VER USUARIOS</a>
