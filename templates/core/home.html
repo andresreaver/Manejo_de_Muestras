@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <title>Balalaika Gestión</title>
+</head>
+<body>
+    <h1>Bienvenido a Balalaika Gestión</h1>
+    <p>Hola, {{ request.user.username }} 👋</p>
+    <a href="{% url 'logout' %}">Cerrar sesión</a>
+</body>
+{% endblock %}

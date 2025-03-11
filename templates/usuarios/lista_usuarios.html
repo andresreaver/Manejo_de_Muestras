@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Lista de Usuarios</h2>
+    <table>
+        <tr>
+            <th>Usuarios</th>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Cédula</th>
+            <th>Cargo</th>
+            <th>Celular</th>
+            <th>Rol</th>
+        </tr>
+    {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.username }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.perfilusuario.nombre }}</td>
+            <td>{{ usuario.perfilusuario.apellidos }}</td>
+            <td>{{ usuario.perfilusuario.cedula }}</td>
+            <td>{{ usuario.perfilusuario.cargo }}</td>
+            <td>{{ usuario.perfilusuario.celular }}</td>
+            <td>{{ usuario.perfilusuario.rol }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <a href="{% url 'crear_usuario' %}">Crear Usuario</a>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Crear Usuario</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="{{ form.username.id_for_label }}">Usuario:</label>
+        {{ form.username }}
+    </div>
+    <div>
+        <label for="{{ form.email.id_for_label }}">Correo:</label>
+        {{ form.email }}
+    </div>
+        <div>
+        <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+        {{ form.password }}
+    </div>
+        <div>
+        <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+        {{ form.nombre }}
+    </div>
+        <div>
+        <label for="{{ form.apellidos.id_for_label }}">Apellidos:</label>
+        {{ form.apellidos }}
+    </div>
+        <div>
+        <label for="{{ form.cedula.id_for_label }}">Cédula:</label>
+        {{ form.cedula }}
+    </div>
+        <div>
+        <label for="{{ form.cargo.id_for_label }}">Cargo:</label>
+        {{ form.cargo }}
+    </div>
+        <div>
+        <label for="{{ form.celular.id_for_label }}">Celular:</label>
+        {{ form.celular }}
+    </div>
+        <div>
+        <label for="{{ form.rol.id_for_label }}">Rol:</label>
+        {{ form.rol }}
+    </div>
+
+    <button type="submit">Crear Uusario</button>
+</form>
+
+<a href="{% url 'lista_usuarios' %}">VER USUARIOS</a>
+{% endblock %}
