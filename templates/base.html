@@ -13,69 +13,129 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 
     {% block extra_css %}{% endblock %}
+
+    <style>
+        /* Estilo de la barra lateral */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            background: #2f5f2d; /* Negro oscuro elegante */
+            color: #8faf3e;
+            padding-top: 20px;
+        }
+        .sidebar h4 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .nav-link {
+            color: #8faf3e; /* Blanco suave */
+            font-size: 16px;
+            padding: 8px 15px;
+            transition: all 0.3s;
+        }
+        .nav-link:hover {
+            background: #8faf3e; /* Un gris oscuro */
+            border-radius: 5px;
+        }
+        .nav-item .accordion-button {
+            background: #8faf3e;
+            color: white;
+        }
+        .nav-item .accordion-button:hover {
+            background: #909fad;
+        }
+
+        /* Contenedor principal */
+        .main-content {
+            margin-left: 270px; /* Para dar espacio a la barra lateral */
+            padding: 30px;
+            min-height: 100vh;
+            background: white; /* Fondo claro */
+        }
+
+        .accordion-item {
+            background-color: #656464FF;
+        }
+        /* Pie de página */
+        .footer {
+            text-align: right;
+            padding: 3px;
+            background: #8faf3e;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Barra lateral -->
-        <div class="sidebar p-3 bg-dark">
-            <h4 class="text-white">Menú</h4>
-            {% if user.is_authenticated %}
-                <div class="accordion accordion-flush" id="menuMuestras">
+
+    <!-- Barra lateral -->
+    <div class="sidebar">
+        <h4>📌 Menú</h4>
+        {% if user.is_authenticated %}
+            <div class="accordion accordion-flush" id="menuMuestras">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed text-black" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMuestras">
+                            ✂️ Muestras
+                        </button>
+                    </h2>
+                    <div id="collapseMuestras" class="accordion-collapse collapse" data-bs-parent="#menuMuestras">
+                        <div class="accordion-body">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="{% url 'lista_registros' %}">📋 Todas las muestras</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'solicitar_muestra' %}">➕ Solicitar muestras</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'seguimiento_muestra' %}">⚙️ Procesar Muestras</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'entrega_muestra' %}">📦 Legalizar Muestras</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if user.is_staff %}
+                <div class="accordion accordion-flush mt-2" id="menuUsuarios">
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingMuestras">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMuestras" aria-expanded="false" aria-controls="collapseMuestras">
-                                ✂️ Muestras
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-black" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsuarios">
+                                🛂 Usuarios
                             </button>
                         </h2>
-                        <div id="collapseMuestras" class="accordion-collapse collapse" aria-labelledby="headingMuestras" data-bs-parent="#menuMuestras">
+                        <div id="collapseUsuarios" class="accordion-collapse collapse" data-bs-parent="#menuUsuarios">
                             <div class="accordion-body">
-                                <ul class="nav flex-column bg-primary-subtle">
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_registros' %}">📋 Todas las muestras</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'solicitar_muestra' %}">➕ Solicitar muestras</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'seguimiento_muestra' %}">⚙️ Procesar Muestras</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'entrega_muestra' %}">📦 Legalizar Muestras</a></li>
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'crear_usuario' %}">➕ Crear Usuario</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_usuarios' %}">📄 Lista Usuarios</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {% if user.is_staff %}  {# Solo los administradores pueden ver esta sección #}
-                    <div class="accordion accordion-flush mt-2" id="menuUsuarios">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingUsuarios">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsuarios" aria-expanded="false" aria-controls="collapseUsuarios">
-                                    🛂 Usuarios
-                                </button>
-                            </h2>
-                            <div id="collapseUsuarios" class="accordion-collapse collapse" aria-labelledby="headingUsuarios" data-bs-parent="#menuUsuarios">
-                                <div class="accordion-body">
-                                    <ul class="nav flex-column bg-primary-subtle">
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'crear_usuario' %}">➕ Crear Usuario</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_usuarios' %}">📄 Lista Usuarios</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="{% url 'user_logout' %}">🚪 Cerrar Sesión</a>
-                </li>
-            {% else %}
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{% url 'user_login' %}">🔑 Iniciar Sesión</a>
-                    </li>
-                </ul>
             {% endif %}
-        </div>
 
-        <!-- Contenido principal -->
-        <div class="container p-4">
-            {% block content %}{% endblock %}
-        </div>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="{% url 'user_logout' %}">🚪 Cerrar Sesión</a>
+            </li>
+        {% else %}
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="{% url 'user_login' %}">🔑 Iniciar Sesión</a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        <small>© 2025 Balalaika - Todos los derechos reservados.</small>
     </div>
 
     <!-- Bootstrap JS -->
@@ -83,4 +143,3 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
-

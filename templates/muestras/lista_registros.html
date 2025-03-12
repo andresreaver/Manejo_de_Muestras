@@ -1,27 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Agregar Registros{% endblock %}
+{% block title %}Lista de Registros{% endblock %}
 
 {% block content %}
+<div class="container-lg mt-8">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">📋 Lista de Registros</h2>
 
-    <h2>Lista de Registros</h2>
+        <!-- Formulario de Búsqueda y Filtros -->
 
         <form method="GET" class="row g-3 mb-4">
             <!-- Buscar por Cliente -->
             <div class="col-md-3">
-                <input type="text" name="cliente" class="form-control" placeholder="Buscar Cliente" value="{{ cliente }}">
+                <input type="text" name="cliente" class="form-control" placeholder="🔎 Cliente" value="{{ cliente }}">
             </div>
-
 
             <!-- Buscar por Referencia -->
             <div class="col-md-3">
-                <input type="text" name="referencia" class="form-control" placeholder="Buscar Referencia" value="{{ referencia }}">
+                <input type="text" name="referencia" class="form-control" placeholder="🔎 Referencia" value="{{ referencia }}">
             </div>
 
             <!-- Filtrar por Comercial -->
             <div class="col-md-3">
                 <select name="comercial" class="form-select">
-                    <option value="">Filtrar por Comercial</option>
+                    <option value="">🛒 Comercial</option>
                     {% for value, label in comercial_choices %}
                         <option value="{{ value }}" {% if comercial_selected == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
@@ -31,83 +33,104 @@
             <!-- Filtrar por Estado -->
             <div class="col-md-3">
                 <select name="estado" class="form-select">
-                    <option value="">Filtrar por Estado</option>
+                    <option value="">📌 Estado</option>
                     {% for value, label in estado_choices %}
                         <option value="{{ value }}" {% if estado_selected == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <!-- Botón de Filtrar -->
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-            </div>
+            <!-- Botones de Acción -->
 
-            <!-- Botón de Reset -->
-            <div class="col-md-2">
-                <a href="{% url 'lista_registros' %}" class="btn btn-secondary w-100">Reset</a>
-            </div>
-        
+                <div class="gap-2 d-md-inline-flex mx-auto justify-content-md-end">
+                    <button class="col btn btn-info">🔍 Filtrar</button>
+                    <a href="{% url 'lista_registros' %}" class="col btn btn-secondary" type="button">🔄 Reset</a>
+                </div>
+
+
         </form>
 
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Fecha Solicitud</th>
-                <th>Cliente</th>
-                <th>Comercial</th>
-                <th>Referencia</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for registro in page_obj %}
-            <tr>
-                <td>{{ registro.fecha_solicitud }}</td>
-                <td>{{ registro.cliente }}</td>
-                <td>{{ registro.comercial }}</td>
-                <td>{{ registro.referencia}}</td>
-                <td><span class="badge bg-primary">{{ registro.estado }}</span></td>
-                <td>
-                    <span class="btn btn-outline-secondary"><a href="{% url 'editar_registro' registro.pk %}">📝 Editar</a></span>
-                    <span class="btn btn-outline-danger"><a href="{% url 'eliminar_registro' registro.pk %}">❌ Eliminar</a></span>
-                </td>
+        <!-- Tabla de Registros -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-warning text-center">
+                    <tr>
+                        <th class="border">📅 Fecha Solicitud</th>
+                        <th class="border">👤 Cliente</th>
+                        <th class="border">🛒 Comercial</th>
+                        <th class="border">🏷️ Referencia</th>
+                        <th class="border">📌 Estado</th>
+                        <th class="border">⚙️ Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in page_obj %}
+                    <tr class="text-start small">
+                        <td>{{ registro.fecha_solicitud }}</td>
+                        <td>{{ registro.cliente }}</td>
+                        <td>{{ registro.comercial }}</td>
+                        <td>{{ registro.referencia }}</td>
+                        <td>{% if registro.estado == "SOLICITADA" %}
+                                <span class="badge bg-warning">{{ registro.estado }}</span>
+                            {% elif registro.estado == "EN PROCESO" %}
+                                <span class="badge bg-primary">POR LEGALIZAR</span>
+                            {% elif registro.estado == "SIN EXISTENCIA" %}
+                                <span class="badge bg-danger">{{ registro.estado }}</span>
+                            {% elif registro.estado == "ENTREGADO" %}
+                                <span class="badge bg-success">{{ registro.estado }}</span>
+                            {% endif %}</td>
+                        <td class="btn-group-sm gap-1" role="group">
+                            {% if registro.estado == "SOLICITADA" %}
+                                <a href="{% url 'editar_registro' registro.pk %}" class="btn btn-primary">Editar</a>
+                                <a href="{% url 'eliminar_registro' registro.pk %}" class="btn btn-secondary">Eliminar</a>
+                                {% elif  registro.estado == "EN PROCESO" %}
+                                    <a href="{% url 'actualizar_entrega' registro.pk %}"class="btn btn-info">Legalizar</a>
+                            {% else %}
+                            <span class="badge bg-success">OK</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">⚠️ No se encontraron registros.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Paginación -->
+        <div class="d-flex justify-content-center mt-4">
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">⏮ Primero</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">⬅ Anterior</a>
+                        </li>
+                    {% endif %}
 
-    <div class="pagination-container mt-4">
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">Primero</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Anterior</a>
-                </li>
-            {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+                            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
 
-            {% for num in page_obj.paginator.page_range %}
-                {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
-                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Último</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente ➡</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">⏭ Último</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 {% endblock %}

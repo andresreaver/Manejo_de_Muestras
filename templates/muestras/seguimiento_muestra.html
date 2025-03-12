@@ -1,44 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}Seguimiento de Muestras{% endblock %}
+{% block title %}📊 Seguimiento de Muestras{% endblock %}
 
 {% block content %}
-    <h2>Seguimiento de Muestras</h2>
-        <table class="table table-striped mt-3">
-            <thead>
+<div class="container-lg mt-8">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">📊 Seguimiento de Muestras</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-warning text-center">
                 <tr>
-                    <th>Fecha Solicitud</th>
-                    <th>Comercial</th>
-                    <th>Cliente</th>
-                    <th>Referencia</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <th>📅 Fecha Solicitud</th>
+                    <th>🛒 Comercial</th>
+                    <th>🏢 Cliente</th>
+                    <th>🔖 Referencia</th>
+                    <th>📌 Estado</th>
+                    <th>⚙️ Acciones</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for registro in muestras %}
-                <tr>
-                    <td>{{ registro.fecha_solicitud }}</td>
-                    <td>{{ registro.comercial }}</td>
-                    <td>{{ registro.cliente }}</td>
-                    <td>{{ registro.referencia }}</td>
-                    <td>
-                        {% if registro.estado == "SOLICITADA" %}
-                            <span class="badge bg-warning">{{ registro.estado }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if registro.estado == "SOLICITADA" %}
-                        <a href="{% url 'actualizar_muestra' registro.pk %}" class="btn btn-primary btn-sm">A proceso</a>
-                        <a href="{% url 'marcar_sin_existencia' registro.pk %}" class="btn btn-danger btn-sm">Sin Existencia</a>
-                        {% endif %}
-                    </td>
-                </tr>
+                    <tr class="text-start small">
+                        <td>{{ registro.fecha_solicitud }}</td>
+                        <td>{{ registro.comercial }}</td>
+                        <td>{{ registro.cliente }}</td>
+                        <td>{{ registro.referencia }}</td>
+                        <td>
+                            {% if registro.estado == "SOLICITADA" %}
+                                <span class="badge bg-warning text-dark">{{ registro.estado }}</span>
+                            {% elif registro.estado == "PROCESO" %}
+                                <span class="badge bg-success">{{ registro.estado }}</span>
+                            {% elif registro.estado == "SIN EXISTENCIA" %}
+                                <span class="badge bg-danger">{{ registro.estado }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registro.estado == "SOLICITADA" %}
+                                <div class="btn-group gap-1">
+                                    <a href="{% url 'actualizar_muestra' registro.pk %}" class="btn btn-primary btn-sm">A proceso</a>
+                                    <a href="{% url 'marcar_sin_existencia' registro.pk %}" class="btn btn-danger btn-sm">Sin Existencia</a>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay muestras en estado SOLICITADA.</td>
-                </tr>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">⚠️ No hay muestras en estado <b>SOLICITADA</b>.</td>
+                    </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
