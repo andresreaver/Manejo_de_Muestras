@@ -13,3 +13,6 @@ DATABASES = {
         "PORT": os.environ.get("BLKPYAPP_DB_PORT", "5432"),
     }
 }
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
