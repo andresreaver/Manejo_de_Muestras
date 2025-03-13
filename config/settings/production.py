@@ -13,6 +13,7 @@ DATABASES = {
         "PORT": os.environ.get("BLKPYAPP_DB_PORT", "5432"),
     }
 }
+CSRF_TRUSTED_ORIGINS = ["http://10.26.3.248"]
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
