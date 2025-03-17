@@ -15,6 +15,25 @@ DATABASES = {
 }
 CSRF_TRUSTED_ORIGINS = ["http://10.26.3.248"]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/django_errors.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "config/staticfiles"
 
