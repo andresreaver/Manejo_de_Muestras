@@ -15,6 +15,6 @@ DATABASES = {
 }
 CSRF_TRUSTED_ORIGINS = ["http://10.26.3.248"]
 
-STATIC_URL = "config/static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "config/staticfiles"
 
