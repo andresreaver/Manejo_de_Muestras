@@ -2,7 +2,7 @@ import os
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ["10.26.3.248"]
+ALLOWED_HOSTS = ["10.26.3.248", "Balalaika.app", "localhost", "127.0.0.1"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

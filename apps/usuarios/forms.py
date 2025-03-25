@@ -2,10 +2,6 @@ from django import forms
 from django.contrib.auth.models import User
 from apps.usuarios.models import PerfilUsuario
 
-from django import forms
-from django.contrib.auth.models import User
-from apps.usuarios.models import PerfilUsuario
-
 class CrearUsuarioForm(forms.ModelForm):
     nombre = forms.CharField(
         max_length=50,
