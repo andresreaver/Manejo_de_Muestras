@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('usuarios/', include('apps.usuarios.urls')),
     path('muestras/', include('apps.muestras.urls')),
+    path('clientes/', include('apps.clientes.urls')),
 
     #Paginas de Login y Logout
     path('login/', LoginView.as_view(template_name='usuarios/login.html'), name='login'),

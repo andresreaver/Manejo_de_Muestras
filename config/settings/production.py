@@ -21,7 +21,7 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = [
-        "http://10.26.3.248",
+        "https://10.26.3.248",
         "https://balalaika.app",
     ]
 LOGGING = {

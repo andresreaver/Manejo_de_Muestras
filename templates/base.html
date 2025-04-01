@@ -116,6 +116,26 @@
                 </div>
             {% endif %}
 
+            {% if user.is_staff %}
+                <div class="accordion accordion-flush mt-2" id="menuClientes">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-black" type="button" data-bs-toggle="collapse" data-bs-target="#collapseClientes">
+                                👤 Clientes
+                            </button>
+                        </h2>
+                        <div id="collapseClientes" class="accordion-collapse collapse" data-bs-parent="#menuClientes">
+                            <div class="accordion-body">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'crear_cliente' %}">➕ Crear Cliente</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_clientes' %}">📄 Clientes</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <li class="nav-item">
                 <a class="nav-link text-danger" href="{% url 'user_logout' %}">🚪 Cerrar Sesión</a>
             </li>
