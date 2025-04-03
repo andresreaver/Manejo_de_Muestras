@@ -20,7 +20,7 @@
             width: 260px;
             height: 100vh;
             position: fixed;
-            background: #2f5f2d; /* Negro oscuro elegante */
+            background: #2f5f2d;
             color: #8faf3e;
             padding-top: 20px;
         }
@@ -148,6 +148,16 @@
         {% endif %}
     </div>
 
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
     <!-- Contenido principal -->
     <div class="main-content">
         {% block content %}{% endblock %}
