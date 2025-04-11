@@ -16,7 +16,6 @@ def crear_usuario_con_perfil(datos):
     usuario.set_password(datos["password"])
     usuario.save()
 
-
     PerfilUsuario.objects.create(
         usuario=usuario,
         nombre=datos["nombre"],
@@ -27,7 +26,26 @@ def crear_usuario_con_perfil(datos):
         celular=datos["celular"],
         rol=datos["rol"]
     )
+
+    asignar_permisos_por_rol(usuario, datos["rol"])
     return usuario
+
+def asignar_permisos_por_rol(usuario, rol):
+    if rol == 'Admin':
+        usuario.is_staff = True
+        usuario.user_permissions.set(Permission.objects.all())
+    elif rol == 'Gestor':
+        usuario.is_staff = False
+        content_type = ContentType.objects.get(app_label='auth', model='user')
+        permisos = Permission.objects.filter(content_type=content_type, codename__in=[
+            'add_user'
+        ])
+        usuario.user_permissions.set(permisos)
+    else:  # Operacion o sin permisos de gestión
+        usuario.is_staff = False
+        usuario.user_permissions.clear()
+
+    usuario.save()
 
 def user_login(request):
     if request.user.is_authenticated:

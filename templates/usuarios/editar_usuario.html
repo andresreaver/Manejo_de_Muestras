@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-auto">
+    <div class="d-flex justify-content align-items-center">
+
+        <div class="card shadow-lg p-4 w-100">
+            <h2 class="card-header text-center mb-4">✏️ Editar Usuario</h2>
+
+            <form method="POST" class="needs-validation">
+                {% csrf_token %}
+
+                <div class="row">
+                    <!-- Primera Columna -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Usuario:</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Correo:</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña (opcional):</label>
+                            {{ form.password }}
+                            <small class="form-text text-muted">Si no deseas cambiarla, deja este campo vacío.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre:</label>
+                            {{ form.nombre }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.apellido.id_for_label }}" class="form-label">Apellido:</label>
+                            {{ form.apellido }}
+                        </div>
+                    </div>
+
+                    <!-- Segunda Columna -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.cedula.id_for_label }}" class="form-label">Cédula:</label>
+                            {{ form.cedula }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.cargo.id_for_label }}" class="form-label">Cargo:</label>
+                            {{ form.cargo }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.celular.id_for_label }}" class="form-label">Celular:</label>
+                            {{ form.celular }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.rol.id_for_label }}" class="form-label">Rol:</label>
+                            {{ form.rol }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-warning px-5">💾 Guardar Cambios</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'lista_usuarios' %}" class="btn btn-link">👥 Ver Usuarios</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -17,6 +17,12 @@ class PerfilUsuario(models.Model):
     celular = models.CharField(max_length=20)
     rol = models.CharField(max_length=20, choices=ROLES_CHOICES)
 
+    def es_admin(self):
+        return self.rol == 'Admin'
+
+    def es_gestor(self):
+        return self.rol == 'Gestor'
+
     def __str__(self):
-        return {self.nombre}
+        return f"{self.nombre} {self.apellido}"
 
